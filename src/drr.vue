@@ -1,26 +1,27 @@
 <template>
-  <div class="drr" :style="style"
-       :class="classObject"
-       @dblclick="dblclick($event)"
-       @mousedown="bodyMouseDown($event)"
-       @touchstart.stop.prevent="bodyMouseDown($event)">
+  <div
+      class="drr"
+      :style="style"
+      :class="classObject"
+      @dblclick="dblclick($event)"
+      @mousedown="bodyMouseDown($event)"
+      @touchstart.stop.prevent="bodyMouseDown($event)">
     <slot></slot>
     <div
       v-for="stick in sticks"
+      :key="stick"
       class="drr-stick"
       :class="['drr-stick-' + stick, resizable ? '' : 'not-resizable']"
       @mousedown.stop.prevent="stickDown(stick, $event)"
       @touchstart.stop.prevent="stickDown(stick, $event)"
       :style="drrStick(stick)">
     </div>
-    <div class="ro-stick-handle" v-if="rotatable"></div>
+    <div v-if="rotatable" class="ro-stick-handle"></div>
   </div>
 </template>
 
 <script>
-  import Vector from '@minogin/vector'
-
-  const _ = require('lodash');
+  import Vector from '@minogin/vector';
 
   const stickSize = 8;
   const roStickSize = 20;
@@ -34,7 +35,7 @@
       l: 'left',
       m: 'marginLeft',
       r: 'right',
-    }
+    },
   };
 
   export default {
@@ -44,84 +45,84 @@
         type: Number,
         required: true,
         validator: function (val) {
-          return typeof val === 'number'
-        }
+          return typeof val === 'number';
+        },
       },
       y: {
         type: Number,
         required: true,
         validator: function (val) {
-          return typeof val === 'number'
-        }
+          return typeof val === 'number';
+        },
       },
       w: {
         type: Number,
         required: true,
         validator: function (val) {
-          return val > 0
-        }
+          return val > 0;
+        },
       },
       h: {
         type: Number,
         required: true,
         validator: function (val) {
-          return val > 0
-        }
+          return val > 0;
+        },
       },
       angle: {
         type: Number,
         default: 0,
         validator: function (val) {
-          return typeof val === 'number'
-        }
+          return typeof val === 'number';
+        },
       },
       selected: {
         type: Boolean,
-        default: false
+        default: false,
       },
       selectable: {
         type: Boolean,
-        default: true
+        default: true,
       },
       draggable: {
         type: Boolean,
-        default: true
+        default: true,
       },
       resizable: {
         type: Boolean,
-        default: true
+        default: true,
       },
       rotatable: {
         type: Boolean,
-        default: true
+        default: true,
       },
       hasActiveContent: {
         type: Boolean,
-        default: false
+        default: false,
       },
       aspectRatio: {
         type: Boolean,
-        default: false
+        default: false,
       },
       dragHandle: {
         type: String,
-        default: null
+        default: null,
       },
       dragCancel: {
         type: String,
-        default: null
+        default: null,
       },
       outerBound: {
-        type: Object
+        type: Object,
       },
       innerBound: {
-        type: Object
+        type: Object,
       },
       dragHandler: {
-        type: Function
+        type: Function,
       },
       resizeHandler: {
-        type: Function
+        type: Function,
       },
       arrowStep: {
         type: Number,
@@ -141,18 +142,18 @@
         bodyDrag: false,
         dragged: false,
         resized: false,
-        rotated: false
-      }
+        rotated: false,
+      };
     },
 
     computed: {
       sticks() {
-        let sticks = []
+        let sticks = [];
         if (this.resizable)
-          sticks.push('tl', 'tr', 'br', 'bl')
+          sticks.push('tl', 'tr', 'br', 'bl');
         if (this.rotatable)
-          sticks.push('ro')
-        return sticks
+          sticks.push('ro');
+        return sticks;
       },
 
       classObject() {
@@ -162,8 +163,8 @@
           'selectable': this.selectable,
           'non-selectable': !this.selectable,
           'dragging': this.bodyDrag,
-          'content-active': this.contentActive
-        }
+          'content-active': this.contentActive,
+        };
       },
 
       style() {
@@ -172,8 +173,8 @@
           top: (this.cy - this.height / 2) + 'px',
           width: this.width + 'px',
           height: this.height + 'px',
-          transform: 'rotate(' + this.rotation + 'deg)'
-        }
+          transform: 'rotate(' + this.rotation + 'deg)',
+        };
       },
 
       drrStick() {
@@ -191,7 +192,7 @@
             stickStyle[styleMapping.x[stick[1]]] = `${-stickSize / 2}px`;
           }
           return stickStyle;
-        }
+        };
       },
     },
 
@@ -203,50 +204,50 @@
           this.$emit('deselect');
       },
       selected(val) {
-        this.active = val
+        this.active = val;
       },
       hasActiveContent: {
         handler: function(val) {
           if (val) {
-            this.$on('content-active', this.onContentActive)
-            this.$on('content-inactive', this.onContentInactive)
+            this.$on('content-active', this.onContentActive);
+            this.$on('content-inactive', this.onContentInactive);
           }
           else {
-            this.$off('content-active')
-            this.$off('content-inactive')
+            this.$off('content-active');
+            this.$off('content-inactive');
             if (this.contentActive)
-              this.onContentInactive()
+              this.onContentInactive();
           }
         },
-        immediate: true
+        immediate: true,
       },
       x() {
         if (this.stickDrag || this.bodyDrag)
-          return
-        this.cx = this.x
+          return;
+        this.cx = this.x;
       },
       y() {
         if (this.stickDrag || this.bodyDrag)
-          return
-        this.cy = this.y
+          return;
+        this.cy = this.y;
       },
       w() {
         if (this.stickDrag || this.bodyDrag)
-          return
+          return;
         this.currentStick = ['m', 'r'];
-        this.width = this.w
+        this.width = this.w;
       },
       h() {
         if (this.stickDrag || this.bodyDrag)
-          return
+          return;
         this.currentStick = ['b', 'm'];
-        this.height = this.h
+        this.height = this.h;
       },
       angle() {
         if (this.stickDrag || this.bodyDrag)
-          return
-        this.rotation = this.angle
-      }
+          return;
+        this.rotation = this.angle;
+      },
     },
 
     created: function () {
@@ -288,7 +289,7 @@
       }
     },
 
-    beforeDestroy: function () {
+    beforeUnmount: function () {
       document.documentElement.removeEventListener('mousemove', this.move);
       document.documentElement.removeEventListener('mouseup', this.up);
       document.documentElement.removeEventListener('mouseleave', this.up);
@@ -308,49 +309,49 @@
           y: this.cy,
           w: this.width,
           h: this.height,
-          angle: this.rotation
-        }
+          angle: this.rotation,
+        };
       },
 
       setRect(r) {
-        this.cx = r.x
-        this.cy = r.y
-        this.width = r.w
-        this.height = r.h
-        this.angle = r.angle
+        this.cx = r.x;
+        this.cy = r.y;
+        this.width = r.w;
+        this.height = r.h;
+        this.angle = r.angle;
       },
 
       dblclick(e) {
         if (!this.selectable)
-          return
+          return;
 
-        this.$emit('content-active')
+        this.$emit('content-active');
       },
 
       onContentActive() {
-        this.contentActive = true
-        this.active = false
+        this.contentActive = true;
+        this.active = false;
         for (const child of this.$children) {
-          child.$emit('active')
+          child.$emit('active');
         }
       },
 
       onContentInactive() {
-        this.contentActive = false
-        this.active = true
+        this.contentActive = false;
+        this.active = true;
         for (const child of this.$children) {
-          child.$emit('inactive')
+          child.$emit('inactive');
         }
       },
 
       deselect() {
-        this.$emit('deselect')
-        this.active = false
+        this.$emit('deselect');
+        this.active = false;
       },
 
       move(ev) {
         if (!this.stickDrag && !this.bodyDrag) {
-          return
+          return;
         }
 
         ev.stopPropagation();
@@ -359,7 +360,7 @@
           this.stickMove(ev);
         }
         if (this.bodyDrag) {
-          this.bodyMove(ev)
+          this.bodyMove(ev);
         }
       },
 
@@ -368,17 +369,17 @@
           this.stickUp(ev);
         }
         if (this.bodyDrag) {
-          this.bodyUp(ev)
+          this.bodyUp(ev);
         }
       },
 
       bodyMouseDown: function (e) {
         if (this.contentActive || !this.selectable) {
-          return
+          return;
         }
         else {
-          e.preventDefault()
-          e.stopPropagation()
+          e.preventDefault();
+          e.stopPropagation();
         }
 
         let target = e.target || e.srcElement;
@@ -386,34 +387,34 @@
         this.active = true;
 
         if (e.button && e.button !== 0) {
-          return
+          return;
         }
 
         this.$emit('clicked', e);
 
         if (!this.draggable || !this.active) {
-          return
+          return;
         }
 
         if (this.dragHandle && target.getAttribute('data-drag-handle') !== this._uid.toString()) {
-          return
+          return;
         }
 
         if (this.dragCancel && target.getAttribute('data-drag-cancel') === this._uid.toString()) {
-          return
+          return;
         }
 
-        this.bodyDrag = true
-        this.dragged = false
+        this.bodyDrag = true;
+        this.dragged = false;
 
-        this.dragStartEmitted = false
-        this.startRect = _.cloneDeep(this.getRect())
+        this.dragStartEmitted = false;
+        this.startRect = { ...this.getRect() };
 
-        this.stickStartPos.mouseX = e.pageX || e.touches[0].pageX
-        this.stickStartPos.mouseY = e.pageY || e.touches[0].pageY
+        this.stickStartPos.mouseX = e.pageX || e.touches[0].pageX;
+        this.stickStartPos.mouseY = e.pageY || e.touches[0].pageY;
 
-        this.stickStartPos.cx = this.cx
-        this.stickStartPos.cy = this.cy
+        this.stickStartPos.cx = this.cx;
+        this.stickStartPos.cy = this.cy;
       },
 
       bodyMove(ev) {
@@ -421,62 +422,62 @@
 
         const newPos = {
           mouseX: ev.pageX || ev.touches[0].pageX,
-          mouseY: ev.pageY || ev.touches[0].pageY
-        }
+          mouseY: ev.pageY || ev.touches[0].pageY,
+        };
         const delta = {
           x: newPos.mouseX - stickStartPos.mouseX,
-          y: newPos.mouseY - stickStartPos.mouseY
-        }
+          y: newPos.mouseY - stickStartPos.mouseY,
+        };
 
-        let newcx = stickStartPos.cx + delta.x
-        let newcy = stickStartPos.cy + delta.y
-        let x1 = newcx - this.width / 2
-        let y1 = newcy - this.height / 2
-        let x2 = newcx + this.width / 2
-        let y2 = newcy + this.height / 2
+        let newcx = stickStartPos.cx + delta.x;
+        let newcy = stickStartPos.cy + delta.y;
+        let x1 = newcx - this.width / 2;
+        let y1 = newcy - this.height / 2;
+        let x2 = newcx + this.width / 2;
+        let y2 = newcy + this.height / 2;
 
         if (this.outerBound && this.rotation == 0) {
-          let bx1 = this.outerBound.x - this.outerBound.w / 2
-          let by1 = this.outerBound.y - this.outerBound.h / 2
-          let bx2 = this.outerBound.x + this.outerBound.w / 2
-          let by2 = this.outerBound.y + this.outerBound.h / 2
+          let bx1 = this.outerBound.x - this.outerBound.w / 2;
+          let by1 = this.outerBound.y - this.outerBound.h / 2;
+          let bx2 = this.outerBound.x + this.outerBound.w / 2;
+          let by2 = this.outerBound.y + this.outerBound.h / 2;
           if (x1 < bx1)
-            delta.x -= x1 - bx1
+            delta.x -= x1 - bx1;
           if (x2 > bx2)
-            delta.x -= x2 - bx2
+            delta.x -= x2 - bx2;
           if (y1 < by1)
-            delta.y -= y1 - by1
+            delta.y -= y1 - by1;
           if (y2 > by2)
-            delta.y -= y2 - by2
+            delta.y -= y2 - by2;
         }
 
         if (this.innerBound && this.rotation == 0) {
-          let bx1 = this.innerBound.x - this.innerBound.w / 2
-          let by1 = this.innerBound.y - this.innerBound.h / 2
-          let bx2 = this.innerBound.x + this.innerBound.w / 2
-          let by2 = this.innerBound.y + this.innerBound.h / 2
+          let bx1 = this.innerBound.x - this.innerBound.w / 2;
+          let by1 = this.innerBound.y - this.innerBound.h / 2;
+          let bx2 = this.innerBound.x + this.innerBound.w / 2;
+          let by2 = this.innerBound.y + this.innerBound.h / 2;
           if (x1 > bx1)
-            delta.x -= x1 - bx1
+            delta.x -= x1 - bx1;
           if (x2 < bx2)
-            delta.x -= x2 - bx2
+            delta.x -= x2 - bx2;
           if (y1 > by1)
-            delta.y -= y1 - by1
+            delta.y -= y1 - by1;
           if (y2 < by2)
-            delta.y -= y2 - by2
+            delta.y -= y2 - by2;
         }
 
-        this.cx = stickStartPos.cx + delta.x
-        this.cy = stickStartPos.cy + delta.y
+        this.cx = stickStartPos.cx + delta.x;
+        this.cy = stickStartPos.cy + delta.y;
 
         if (this.dragHandler)
-          this.setRect(this.dragHandler(this.getRect(), ev))
+          this.setRect(this.dragHandler(this.getRect(), ev));
 
         if (!this.dragStartEmitted) {
           this.$emit('dragstart', this.startRect);
-          this.dragStartEmitted = true
+          this.dragStartEmitted = true;
         }
 
-        this.dragged = true
+        this.dragged = true;
         this.$emit('drag', this.getRect());
       },
 
@@ -492,15 +493,15 @@
 
       stickDown: function (stick, ev) {
         if (!this.resizable || !this.active)
-          return
+          return;
 
-        this.resizeStartEmitted = false
-        this.rotateStartEmitted = false
-        this.startRect = _.cloneDeep(this.getRect())
+        this.resizeStartEmitted = false;
+        this.rotateStartEmitted = false;
+        this.startRect = { ...this.getRect() };
 
         this.stickDrag = true;
-        this.resized = false
-        this.rotated = false
+        this.resized = false;
+        this.rotated = false;
         this.stickStartPos.mouseX = ev.pageX || ev.touches[0].pageX;
         this.stickStartPos.mouseY = ev.pageY || ev.touches[0].pageY;
         this.stickStartPos.cx = this.cx;
@@ -508,7 +509,7 @@
         this.stickStartPos.width = this.width;
         this.stickStartPos.height = this.height;
         this.stickStartPos.rotation = this.rotation;
-        this.currentStick = stick
+        this.currentStick = stick;
       },
 
       stickMove(ev) {
@@ -516,134 +517,134 @@
 
         let delta = new Vector(
           (ev.pageX || ev.touches[0].pageX) - stickStartPos.mouseX,
-          (ev.pageY || ev.touches[0].pageY) - stickStartPos.mouseY
-        )
+          (ev.pageY || ev.touches[0].pageY) - stickStartPos.mouseY,
+        );
 
 
         if (this.currentStick == 'ro') {
-          let up = new Vector(0, -(this.height) / 2 - roStickSize)
+          let up = new Vector(0, -(this.height) / 2 - roStickSize);
           let rotationRad = Vector.rad(stickStartPos.rotation);
-          up = up.rotate(rotationRad)
-          let v = up.add(delta)
+          up = up.rotate(rotationRad);
+          let v = up.add(delta);
 
           if (!this.rotateStartEmitted) {
             this.$emit('rotatestart', this.startRect);
-            this.rotateStartEmitted = true
+            this.rotateStartEmitted = true;
           }
 
-          this.rotation = Vector.deg(v.angle()) + 90
-          this.rotated = true
+          this.rotation = Vector.deg(v.angle()) + 90;
+          this.rotated = true;
           this.$emit('rotate', this.getRect());
         }
         else {
-          let dirX = this.currentStick[1] == 'r' ? 1 : -1
-          let dirY = this.currentStick[0] == 'b' ? 1 : -1
+          let dirX = this.currentStick[1] == 'r' ? 1 : -1;
+          let dirY = this.currentStick[0] == 'b' ? 1 : -1;
 
           let phi = Vector.rad(stickStartPos.rotation);
-          let p
+          let p;
           if (this.aspectRatio) {
-            let axis = new Vector(dirX * stickStartPos.width / 2, dirY * stickStartPos.height / 2)
-            axis = axis.rotate(phi).unit()
-            p = axis.mul(axis.mul(delta))
+            let axis = new Vector(dirX * stickStartPos.width / 2, dirY * stickStartPos.height / 2);
+            axis = axis.rotate(phi).unit();
+            p = axis.mul(axis.mul(delta));
           }
           else {
-            p = delta
+            p = delta;
           }
 
-          let pn = p.rotate(-phi)
+          let pn = p.rotate(-phi);
 
-          let newcx = stickStartPos.cx + p.x / 2
-          let newcy = stickStartPos.cy + p.y / 2
-          let newwidth = stickStartPos.width + dirX * pn.x
-          let newheight = stickStartPos.height + dirY * pn.y
-          let x1 = newcx - newwidth / 2
-          let y1 = newcy - newheight / 2
-          let x2 = newcx + newwidth / 2
-          let y2 = newcy + newheight / 2
+          let newcx = stickStartPos.cx + p.x / 2;
+          let newcy = stickStartPos.cy + p.y / 2;
+          let newwidth = stickStartPos.width + dirX * pn.x;
+          let newheight = stickStartPos.height + dirY * pn.y;
+          let x1 = newcx - newwidth / 2;
+          let y1 = newcy - newheight / 2;
+          let x2 = newcx + newwidth / 2;
+          let y2 = newcy + newheight / 2;
 
           if (this.outerBound && this.rotation == 0) {
-            let bx1 = this.outerBound.x - this.outerBound.w / 2
-            let by1 = this.outerBound.y - this.outerBound.h / 2
-            let bx2 = this.outerBound.x + this.outerBound.w / 2
-            let by2 = this.outerBound.y + this.outerBound.h / 2
-            let dx = 0
-            let dy = 0
+            let bx1 = this.outerBound.x - this.outerBound.w / 2;
+            let by1 = this.outerBound.y - this.outerBound.h / 2;
+            let bx2 = this.outerBound.x + this.outerBound.w / 2;
+            let by2 = this.outerBound.y + this.outerBound.h / 2;
+            let dx = 0;
+            let dy = 0;
             if (x1 < bx1)
-              dx = bx1 - x1
+              dx = bx1 - x1;
             if (x2 > bx2)
-              dx = bx2 - x2
+              dx = bx2 - x2;
             if (y1 < by1)
-              dy = by1 - y1
+              dy = by1 - y1;
             if (y2 > by2)
-              dy = by2 - y2
+              dy = by2 - y2;
 
             if (dx != 0 || dy != 0) {
               if (this.aspectRatio) {
                 if (dx / p.x < dy / p.y) {
-                  p.y += dx * p.y / p.x
-                  p.x += dx
+                  p.y += dx * p.y / p.x;
+                  p.x += dx;
                 }
                 else {
-                  p.x += dy * p.x / p.y
-                  p.y += dy
+                  p.x += dy * p.x / p.y;
+                  p.y += dy;
                 }
               }
               else {
-                p.x += dx
-                p.y += dy
+                p.x += dx;
+                p.y += dy;
               }
             }
           }
 
           if (this.innerBound && this.rotation == 0) {
-            let bx1 = this.innerBound.x - this.innerBound.w / 2
-            let by1 = this.innerBound.y - this.innerBound.h / 2
-            let bx2 = this.innerBound.x + this.innerBound.w / 2
-            let by2 = this.innerBound.y + this.innerBound.h / 2
-            let dx = 0
-            let dy = 0
+            let bx1 = this.innerBound.x - this.innerBound.w / 2;
+            let by1 = this.innerBound.y - this.innerBound.h / 2;
+            let bx2 = this.innerBound.x + this.innerBound.w / 2;
+            let by2 = this.innerBound.y + this.innerBound.h / 2;
+            let dx = 0;
+            let dy = 0;
             if (x1 > bx1)
-              dx = bx1 - x1
+              dx = bx1 - x1;
             if (x2 < bx2)
-              dx = bx2 - x2
+              dx = bx2 - x2;
             if (y1 > by1)
-              dy = by1 - y1
+              dy = by1 - y1;
             if (y2 < by2)
-              dy = by2 - y2
+              dy = by2 - y2;
 
             if (dx != 0 || dy != 0) {
               if (this.aspectRatio) {
                 if (dx / p.x < dy / p.y) {
-                  p.y += dx * p.y / p.x
-                  p.x += dx
+                  p.y += dx * p.y / p.x;
+                  p.x += dx;
                 }
                 else {
-                  p.x += dy * p.x / p.y
-                  p.y += dy
+                  p.x += dy * p.x / p.y;
+                  p.y += dy;
                 }
               }
               else {
-                p.x += dx
-                p.y += dy
+                p.x += dx;
+                p.y += dy;
               }
             }
           }
 
-          this.cx = stickStartPos.cx + p.x / 2
-          this.cy = stickStartPos.cy + p.y / 2
-          pn = p.rotate(-phi)
-          this.width = stickStartPos.width + dirX * pn.x
-          this.height = stickStartPos.height + dirY * pn.y
+          this.cx = stickStartPos.cx + p.x / 2;
+          this.cy = stickStartPos.cy + p.y / 2;
+          pn = p.rotate(-phi);
+          this.width = stickStartPos.width + dirX * pn.x;
+          this.height = stickStartPos.height + dirY * pn.y;
 
           if (this.resizeHandler)
-            this.setRect(this.resizeHandler(this.getRect()))
+            this.setRect(this.resizeHandler(this.getRect()));
 
           if (!this.resizeStartEmitted) {
             this.$emit('resizestart', this.startRect);
-            this.resizeStartEmitted = true
+            this.resizeStartEmitted = true;
           }
 
-          this.resized = true
+          this.resized = true;
           this.$emit('resize', this.getRect());
         }
       },
@@ -656,7 +657,7 @@
           x: 0,
           y: 0,
           w: 0,
-          h: 0
+          h: 0,
         };
 
         if (this.resized) {
@@ -724,7 +725,7 @@
         this.$emit('dragstop', rect);
       },
     },
-  }
+  };
 
 </script>
 
