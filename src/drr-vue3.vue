@@ -41,8 +41,10 @@ const styleMapping = {
 const emit = defineEmits([
   'clicked',
   'click',
+  'change',
   'drag',
   'dragstart',
+  'dragstop',
   'select',
   'deselect',
   'rotatestart',
