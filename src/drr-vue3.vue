@@ -65,37 +65,22 @@ const props = defineProps({
   x: {
     type: Number,
     required: true,
-    validator: function (val) {
-      return typeof val === 'number';
-    },
   },
   y: {
     type: Number,
     required: true,
-    validator: function (val) {
-      return typeof val === 'number';
-    },
   },
   w: {
     type: Number,
     required: true,
-    validator: function (val) {
-      return val > 0;
-    },
   },
   h: {
     type: Number,
     required: true,
-    validator: function (val) {
-      return val > 0;
-    },
   },
   angle: {
     type: Number,
     default: 0,
-    validator: function (val) {
-      return typeof val === 'number';
-    },
   },
   selected: {
     type: Boolean,
@@ -210,11 +195,11 @@ const classObject = computed(() => ({
 }));
 
 const style = computed(() => ({
-  left: (cx.value - width.value / 2) + 'px',
-  top: (cy.value - height.value / 2) + 'px',
-  width: width.value + 'px',
-  height: height.value + 'px',
-  transform: 'rotate(' + rotation.value + 'deg)',
+  left: `${cx.value - width.value / 2}px`,
+  top: `${cy.value - height.value / 2}px`,
+  width: `${width.value}px`,
+  height: `${height.value}px`,
+  transform: `rotate(${rotation.value}deg)`,
 }));
 
 const drrStick = computed(() => (stick) => {
@@ -223,7 +208,7 @@ const drrStick = computed(() => (stick) => {
     height: `${stickSize}px`,
   };
 
-  if (stick == 'ro') {
+  if (stick === 'ro') {
     stickStyle['top'] = `${-stickSize / 2 - roStickSize}px`;
     stickStyle['marginLeft'] = `${-stickSize / 2 + 1}px`;
   } else {
@@ -375,23 +360,20 @@ function stickMove(ev) {
     let x2 = newcx + newwidth / 2;
     let y2 = newcy + newheight / 2;
 
-    if (props.outerBound && rotation.value == 0) {
+    if (props.outerBound && rotation.value === 0) {
       let bx1 = props.outerBound.x - props.outerBound.w / 2;
       let by1 = props.outerBound.y - props.outerBound.h / 2;
       let bx2 = props.outerBound.x + props.outerBound.w / 2;
       let by2 = props.outerBound.y + props.outerBound.h / 2;
       let dx = 0;
       let dy = 0;
-      if (x1 < bx1)
-        dx = bx1 - x1;
-      if (x2 > bx2)
-        dx = bx2 - x2;
-      if (y1 < by1)
-        dy = by1 - y1;
-      if (y2 > by2)
-        dy = by2 - y2;
 
-      if (dx != 0 || dy != 0) {
+      if (x1 < bx1) { dx = bx1 - x1; }
+      if (x2 > bx2) { dx = bx2 - x2; }
+      if (y1 < by1) { dy = by1 - y1; }
+      if (y2 > by2) { dy = by2 - y2; }
+
+      if (dx !== 0 || dy !== 0) {
         if (props.aspectRatio) {
           if (dx / p.x < dy / p.y) {
             p.y += dx * p.y / p.x;
@@ -409,30 +391,20 @@ function stickMove(ev) {
       }
     }
 
-    if (props.innerBound && rotation.value == 0) {
+    if (props.innerBound && rotation.value === 0) {
       let bx1 = props.innerBound.x - props.innerBound.w / 2;
       let by1 = props.innerBound.y - props.innerBound.h / 2;
       let bx2 = props.innerBound.x + props.innerBound.w / 2;
       let by2 = props.innerBound.y + props.innerBound.h / 2;
       let dx = 0;
       let dy = 0;
-      if (x1 > bx1) {
-        dx = bx1 - x1;
-      }
 
-      if (x2 < bx2) {
-        dx = bx2 - x2;
-      }
+      if (x1 > bx1) { dx = bx1 - x1; }
+      if (x2 < bx2) { dx = bx2 - x2; }
+      if (y1 > by1) { dy = by1 - y1; }
+      if (y2 < by2) { dy = by2 - y2; }
 
-      if (y1 > by1) {
-        dy = by1 - y1;
-      }
-
-      if (y2 < by2) {
-        dy = by2 - y2;
-      }
-
-      if (dx != 0 || dy != 0) {
+      if (dx !== 0 || dy !== 0) {
         if (props.aspectRatio) {
           if (dx / p.x < dy / p.y) {
             p.y += dx * p.y / p.x;
@@ -485,49 +457,36 @@ function bodyMove(ev) {
   let x2 = newcx + width.value / 2;
   let y2 = newcy + height.value / 2;
 
-  if (props.outerBound && rotation.value == 0) {
+  if (props.outerBound && rotation.value === 0) {
     let bx1 = props.outerBound.x - props.outerBound.w / 2;
     let by1 = props.outerBound.y - props.outerBound.h / 2;
     let bx2 = props.outerBound.x + props.outerBound.w / 2;
     let by2 = props.outerBound.y + props.outerBound.h / 2;
-    if (x1 < bx1)
-      delta.x -= x1 - bx1;
-    if (x2 > bx2)
-      delta.x -= x2 - bx2;
-    if (y1 < by1)
-      delta.y -= y1 - by1;
-    if (y2 > by2)
-      delta.y -= y2 - by2;
+
+    if (x1 < bx1) { delta.x -= x1 - bx1; }
+    if (x2 > bx2) { delta.x -= x2 - bx2; }
+    if (y1 < by1) { delta.y -= y1 - by1; }
+    if (y2 > by2) { delta.y -= y2 - by2; }
   }
 
-  if (props.innerBound && rotation.value == 0) {
+  if (props.innerBound && rotation.value === 0) {
     let bx1 = props.innerBound.x - props.innerBound.w / 2;
     let by1 = props.innerBound.y - props.innerBound.h / 2;
     let bx2 = props.innerBound.x + props.innerBound.w / 2;
     let by2 = props.innerBound.y + props.innerBound.h / 2;
 
-    if (x1 > bx1) {
-      delta.x -= x1 - bx1;
-    }
-
-    if (x2 < bx2) {
-      delta.x -= x2 - bx2;
-    }
-
-    if (y1 > by1) {
-      delta.y -= y1 - by1;
-    }
-
-    if (y2 < by2) {
-      delta.y -= y2 - by2;
-    }
+    if (x1 > bx1) { delta.x -= x1 - bx1; }
+    if (x2 < bx2) { delta.x -= x2 - bx2; }
+    if (y1 > by1) { delta.y -= y1 - by1; }
+    if (y2 < by2) { delta.y -= y2 - by2; }
   }
 
   cx.value = stickStartPos.value.cx + delta.x;
   cy.value = stickStartPos.value.cy + delta.y;
 
-  if (props.dragHandler)
+  if (props.dragHandler) {
     setRect(props.dragHandler(getRect(), ev));
+  }
 
   if (!dragStartEmitted.value) {
     emit('dragstart', startRect.value);
@@ -729,8 +688,7 @@ function bodyMouseDown(e) {
 };
 
 function stickDown(stick, ev) {
-  if (!props.resizable || !active.value)
-    return;
+  if (!props.resizable || !active.value) { return; }
 
   resizeStartEmitted.value = false;
   rotateStartEmitted.value = false;
