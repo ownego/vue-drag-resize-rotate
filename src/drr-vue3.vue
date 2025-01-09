@@ -39,6 +39,10 @@ const styleMapping = {
 };
 
 const emit = defineEmits([
+  'clicked',
+  'click',
+  'drag',
+  'dragstart',
   'select',
   'deselect',
   'rotatestart',
@@ -598,8 +602,8 @@ function setRect(r) {
   emit('update:x', r.x);
   emit('update:y', r.y);
   emit('update:w', r.w);
-  emit('udpate:h', r.h);
-  emit('update.angle', r.angle);
+  emit('update:h', r.h);
+  emit('update:angle', r.angle);
 }
 
 function deselect() {
