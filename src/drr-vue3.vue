@@ -163,7 +163,7 @@ const bodyDrag = ref(false);
 const dragged = ref(false);
 const resized = ref(false);
 const rotated = ref(false);
-const currentStick = ref([]);
+const currentStick = ref('');
 const stickStartPos = ref(getDefaultStickStartPos());
 const startRect = ref(null);
 const parentElement = ref(null);
@@ -254,7 +254,7 @@ watch(() => props.w, () => {
     return;
   }
 
-  currentStick.value = ['m', 'r'];
+  currentStick.value = 'mr';
   width.value = props.w;
 });
 
@@ -263,7 +263,7 @@ watch(() => props.h, () => {
     return;
   }
 
-  currentStick.value = ['b', 'm'];
+  currentStick.value = 'bm';
 
   height.value = props.h;
 });
@@ -318,7 +318,7 @@ function stickMove(ev) {
     (ev.pageY || ev.touches[0].pageY) - stickStartPos.value.mouseY,
   );
 
-  if (currentStick.value[0] === 'ro') {
+  if (currentStick.value === 'ro') {
     let up = new Vector(0, -(height.value) / 2 - roStickSize);
     let rotationRad = Vector.rad(stickStartPos.value.rotation);
     up = up.rotate(rotationRad);
@@ -704,7 +704,7 @@ function stickDown(stick, ev) {
   stickStartPos.value.width = width.value;
   stickStartPos.value.height = height.value;
   stickStartPos.value.rotation = rotation.value;
-  currentStick.value = [stick];
+  currentStick.value = stick;
 }
 
 onMounted(() => {
